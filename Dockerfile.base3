@@ -40,8 +40,10 @@ RUN which cmake && cmake --version
 
 # Cost: 502.5s
 # The libsrt for SRS, which depends on openssl and cmake.
-ADD srt-1.4.1.tar.gz /tmp
-RUN cd /tmp/srt-1.4.1 && \
+# Or use cmake if you like:
+#     mkdir -p build && cd build && cmake .. -DENABLE_SHARED=OFF -DENABLE_STATIC=ON -DENABLE_APPS=OFF -DENABLE_CXX11=OFF
+ADD srt-1.5.3.tar.gz /tmp
+RUN cd /tmp/srt-1.5.3 && \
   ./configure --enable-shared=0 --enable-static --disable-app --enable-c++11=0 && \
   make -j${JOBS} && make install
 

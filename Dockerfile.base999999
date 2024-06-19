@@ -4,7 +4,6 @@ ARG ARCH
 #--------------------------build-----------------------------------------------------
 #------------------------------------------------------------------------------------
 # http://releases.ubuntu.com/focal/
-FROM ${ARCH}ossrs/srs:ubuntu20-base4 as build4
 FROM ${ARCH}ossrs/srs:ubuntu20-base50 as build50
 FROM ${ARCH}ossrs/srs:ubuntu20-base51 as build51
 
@@ -28,7 +27,6 @@ ADD Roboto-Regular.ttf NotoSansSC-Regular.ttf /usr/local/share/fonts/
 
 # Copy all FFmpeg versions and cmake and other tools in /usr/local.
 COPY --from=build51 /usr/local /usr/local
-COPY --from=build4 /usr/local/bin/ffmpeg4 /usr/local/bin/ffprobe4 /usr/local/bin/
 COPY --from=build50 /usr/local/bin/ffmpeg5 /usr/local/bin/ffprobe5 /usr/local/bin/
 
 # Note that for armv7, the ffmpeg5-hevc-over-rtmp is actually ffmpeg5.

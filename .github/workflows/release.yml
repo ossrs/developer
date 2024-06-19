@@ -21,10 +21,9 @@ jobs:
             base: 'Dockerfile.base'
             base2:  ['Dockerfile.base', 'Dockerfile.base2']
             base3:  ['Dockerfile.base', 'Dockerfile.base2', 'Dockerfile.base3']
-            base4:  ['Dockerfile.base', 'Dockerfile.base2', 'Dockerfile.base3', 'Dockerfile.base4']
             base50: ['Dockerfile.base', 'Dockerfile.base2', 'Dockerfile.base3', 'Dockerfile.base50']
             base51: ['Dockerfile.base', 'Dockerfile.base2', 'Dockerfile.base3', 'Dockerfile.base51']
-            base999999:  ['Dockerfile.base', 'Dockerfile.base2', 'Dockerfile.base3', 'Dockerfile.base4', 'Dockerfile.base50', 'Dockerfile.base51', 'Dockerfile.base999999']
+            base999999:  ['Dockerfile.base', 'Dockerfile.base2', 'Dockerfile.base3', 'Dockerfile.base50', 'Dockerfile.base51', 'Dockerfile.base999999']
       ################################################################
       # The github.ref is, for example, refs/tags/v5.0.145 or refs/tags/v5.0-r8
       # Generate variables like:
@@ -40,7 +39,6 @@ jobs:
       base: ${{ steps.filter.outputs.base }}
       base2: ${{ steps.filter.outputs.base2 }}
       base3: ${{ steps.filter.outputs.base3 }}
-      base4: ${{ steps.filter.outputs.base4 }}
       base50: ${{ steps.filter.outputs.base50 }}
       base51: ${{ steps.filter.outputs.base51 }}
       base999999: ${{ steps.filter.outputs.base999999 }}
@@ -190,54 +188,6 @@ jobs:
             registry.cn-hangzhou.aliyuncs.com/ossrs/srs:${{ env.SRS_TAG }}-base3
     runs-on: ubuntu-20.04
 
-  docker-base4:
-    needs:
-      - docker-base3
-      - envs
-    if: ${{ always() && needs.envs.outputs.base4 == 'true' }}
-    steps:
-      ################################################################
-      - name: Covert output to env
-        run: |
-          echo "SRS_TAG=${{ needs.envs.outputs.SRS_TAG }}" >> $GITHUB_ENV
-      ################################################################
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      ################################################################
-      # See https://github.com/crazy-max/ghaction-docker-buildx#moved-to-docker-organization
-      # https://github.com/docker/setup-qemu-action
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      # https://github.com/docker/setup-buildx-action
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      ################################################################
-      - name: Login docker hub
-        uses: docker/login-action@v2
-        with:
-          username: "${{ secrets.DOCKER_USERNAME }}"
-          password: "${{ secrets.DOCKER_PASSWORD }}"
-      - name: Build and push to docker registry
-        run: |
-          docker buildx build --platform linux/arm/v7,linux/arm64/v8,linux/amd64 \
-            --output "type=image,push=true" \
-            -t ossrs/srs:${SRS_TAG}-base4 \
-            -f Dockerfile.base4 .
-      ################################################################
-      - name: Login aliyun hub
-        uses: docker/login-action@v2
-        with:
-          registry: registry.cn-hangzhou.aliyuncs.com
-          username: "${{ secrets.ACR_USERNAME }}"
-          password: "${{ secrets.ACR_PASSWORD }}"
-      - name: Copy to Aliyun registry
-        uses: akhilerm/tag-push-action@v2.1.0
-        with:
-          src: ossrs/srs:${{ env.SRS_TAG }}-base4
-          dst: |
-            registry.cn-hangzhou.aliyuncs.com/ossrs/srs:${{ env.SRS_TAG }}-base4
-    runs-on: ubuntu-20.04
-
   docker-base50:
     needs:
       - docker-base3
@@ -336,7 +286,6 @@ jobs:
 
   docker-base999999:
     needs:
-      - docker-base4
       - docker-base50
       - docker-base51
       - envs

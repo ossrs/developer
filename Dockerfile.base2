@@ -37,7 +37,8 @@ SHELL ["/bin/bash", "-c"]
 # Cost: 15125.8s
 # For cmake. Note that the PATH has /usr/local/bin by default in ubuntu:focal.
 ADD CMake-3.22.5.tar.gz /tmp
-RUN cd /tmp/CMake-3.22.5 && ./configure && make -j${JOBS} && make install
+RUN cd /tmp/CMake-3.22.5 && ./configure && make -j${JOBS} && make install && \
+    rm -rf /tmp/CMake-3.22.5
 #ENV PATH=$PATH:/usr/local/bin
 
 # To limit each jobs in 6h, see https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits

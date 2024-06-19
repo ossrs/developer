@@ -53,7 +53,9 @@ RUN FFOPTIONS=""; if [[ $TARGETPLATFORM != 'linux/arm/v7' ]]; then \
         --enable-filter=drawtext --enable-libfreetype --enable-libfontconfig \
         --enable-libass \
         --enable-libsrt ${FFOPTIONS} && \
-    make -j${JOBS} && make install && echo "FFmpeg5 build and install successfully"
+    make -j${JOBS} && make install && \
+    rm -rf /tmp/ffmpeg-5.0.2 && \
+    echo "FFmpeg5 build and install successfully"
 RUN cp /usr/local/bin/ffmpeg /usr/local/bin/ffmpeg5 && \
     cp /usr/local/bin/ffprobe /usr/local/bin/ffprobe5
 RUN ls -lh /usr/local/bin/*

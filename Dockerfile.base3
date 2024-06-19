@@ -45,7 +45,8 @@ RUN which cmake && cmake --version
 ADD srt-1.5.3.tar.gz /tmp
 RUN cd /tmp/srt-1.5.3 && \
   ./configure --enable-shared=0 --enable-static --disable-app --enable-c++11=0 && \
-  make -j${JOBS} && make install
+  make -j${JOBS} && make install && \
+  rm -rf /tmp/srt-1.5.3
 
 # Cost: 904.1s
 # For libxml2, depends on cmake.
@@ -63,37 +64,45 @@ ADD x265-3.5_RC2.tar.bz2 /tmp
 RUN if [[ $TARGETPLATFORM != 'linux/arm/v7' ]]; then \
         cd /tmp/x265-3.5_RC2/build/linux && \
         sed -i 's/^if(X265_LATEST_TAG)/if(TRUE)/g' ../../source/CMakeLists.txt && \
-        cmake -DENABLE_SHARED=OFF ../../source && make -j${JOBS} && make install; \
+        cmake -DENABLE_SHARED=OFF ../../source && make -j${JOBS} && make install && \
+        rm -rf /tmp/x265-3.5_RC2; \
     fi
 
 # Cost: 204s
 ADD libpng-1.6.40.tar.gz /tmp
-RUN cd /tmp/libpng-1.6.40 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install
+RUN cd /tmp/libpng-1.6.40 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install && \
+    rm -rf /tmp/libpng-1.6.40
 
 # Cost: 128s
 ADD fribidi-1.0.13.tar.bz2 /tmp
-RUN cd /tmp/fribidi-1.0.13 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install
+RUN cd /tmp/fribidi-1.0.13 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install && \
+    rm -rf /tmp/fribidi-1.0.13
 
 # Cost: 2167s
 ADD harfbuzz-8.3.0.tar.bz2 /tmp
-RUN cd /tmp/harfbuzz-8.3.0 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install
+RUN cd /tmp/harfbuzz-8.3.0 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install && \
+    rm -rf /tmp/harfbuzz-8.3.0
 
 # Cost: 259s
 # Depends on libpng.
 ADD freetype-2.13.2.tar.gz /tmp
-RUN cd /tmp/freetype-2.13.2 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install
+RUN cd /tmp/freetype-2.13.2 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install && \
+    rm -rf /tmp/freetype-2.13.2
 
 # Cost: 174s
 ADD expat-2.5.0.tar.bz2 /tmp
-RUN cd /tmp/expat-2.5.0 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install
+RUN cd /tmp/expat-2.5.0 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install && \
+    rm -rf /tmp/expat-2.5.0
 
 # Cost: 399s
 # Depends on gperf, expat, freetype.
 ADD fontconfig-2.14.2.tar.bz2 /tmp
-RUN cd /tmp/fontconfig-2.14.2 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install
+RUN cd /tmp/fontconfig-2.14.2 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install && \
+    rm -rf /tmp/fontconfig-2.14.2
 
 # Cost: 130.9s
 # For libass, which depends on libfreetype6-dev, libfribidi-dev, libharfbuzz-dev, libfontconfig1-dev.
 ADD libass-0.17.1.tar.gz /tmp
-RUN cd /tmp/libass-0.17.1 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install
+RUN cd /tmp/libass-0.17.1 && ./configure --disable-shared --enable-static && make -j${JOBS} && make install && \
+    rm -rf /tmp/libass-0.17.1
 
